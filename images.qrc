@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>line.png</file>
+        <file>move.png</file>
+        <file>oval.png</file>
+        <file>pencil.png</file>
+        <file>plain.png</file>
+        <file>rectangle.png</file>
+        <file>text.png</file>
+    </qresource>
+</RCC>
