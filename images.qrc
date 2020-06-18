@@ -7,5 +7,19 @@
         <file>plain.png</file>
         <file>rectangle.png</file>
         <file>text.png</file>
+        <file>gif-animations-replace-loading-screen-11.gif</file>
+        <file>gihy.gif</file>
+        <file>giphy.gif</file>
+        <file>book.png</file>
+        <file>cross.png</file>
+        <file>save.png</file>
+        <file>writer.png</file>
+        <file>writer(1).png</file>
+        <file>feather.png</file>
+        <file>feather(1).png</file>
+        <file>ungroup.png</file>
+        <file>group.png</file>
+        <file>team.png</file>
+        <file>bin.png</file>
     </qresource>
 </RCC>

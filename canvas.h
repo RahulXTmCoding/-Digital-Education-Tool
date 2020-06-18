@@ -40,8 +40,12 @@ public:
      QBrush *brush=NULL;
      int penWidth=1;
      QColor color=Qt::black;
-
-
+     void selectAll(QModelIndexList il);
+     void groupSelected();
+     void ungroupSelected();
+     void clear();
+     QString save();
+     void open(QJsonArray &);
      int getMode() const;
      void setMode(int value);
 
@@ -63,6 +67,9 @@ protected:
     void mousePressEvent(QMouseEvent *eventPress);
     void mouseReleaseEvent(QMouseEvent *releaseEvent);
     void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *ev);
+    void enterEvent(QEvent * event);
+    void leaveEvent(QEvent * event);
 
 private:
 

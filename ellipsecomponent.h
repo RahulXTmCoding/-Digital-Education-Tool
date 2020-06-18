@@ -15,6 +15,7 @@ private:
     EllipseComponent();
     void draw(QPainter *);
     bool isClicked(QPoint *);
+    QJsonObject *toJsonObject();
     QString componentName();
      void select(QPainter *p);
      void update(int x,int y);

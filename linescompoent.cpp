@@ -45,9 +45,10 @@ LinesCompoent::LinesCompoent()
 void LinesCompoent::draw(QPainter *painter)
 {
 
+    if(points->length()==2) return;
     if(pen==NULL)
     {
-        qDebug()<<"set hua pen";
+
 
         pen=new QPen();
         pen->setWidth(painter->pen().width());
@@ -55,7 +56,7 @@ void LinesCompoent::draw(QPainter *painter)
     }
 
    painter->setPen(*pen);
-    qDebug() << "line draw";
+
 QPoint *p;
 QPoint *p2;
 //painter->setPen(*(this->getPen()));
@@ -70,12 +71,35 @@ for(int i=0;i<this->points->size()-1;i++)
 
 bool LinesCompoent::isClicked(QPoint *)
 {
+
 return false;
 }
 
 QString LinesCompoent::componentName()
 {
-return "Free Style";
+    return "Free Style";
+}
+
+QJsonObject *LinesCompoent::toJsonObject()
+{
+
+    QJsonObject *obj=new QJsonObject();
+
+    obj->insert("code",1);
+    QJsonArray *arr=new QJsonArray();
+    for(int i=0;i<this->getPoints()->length();i++)
+    {
+        QJsonObject *o=new QJsonObject();
+        o->insert("x",this->points->at(i)->x());
+        o->insert("y",this->points->at(i)->y());
+        arr->push_back(*o);
+    }
+    obj->insert("points",*arr);
+    obj->insert("color",this->getPen()->color().name());
+    obj->insert("pwidth",this->getPen()->width());
+
+    return obj;
+
 }
 
 void LinesCompoent::select(QPainter *p)

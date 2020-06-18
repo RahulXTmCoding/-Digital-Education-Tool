@@ -71,7 +71,7 @@ void LineComponent::draw(QPainter *painter)
 
     if(pen==NULL)
     {
-        qDebug()<<"set hua pen";
+
 
         pen=new QPen();
         pen->setWidth(painter->pen().width());
@@ -89,8 +89,7 @@ bool LineComponent::isClicked(QPoint *point)
   d1=sqrt(pow(point->x()-this->getX(),2)+pow(point->y()-this->getY(),2));
   d2=sqrt(pow(point->x()-this->getX2(),2)+pow(point->y()-this->getY2(),2));
   td=sqrt(pow(this->getX()-this->getX2(),2)+pow(this->getY()-this->getY2(),2));
-  qDebug()<<(d1+d2);
-  qDebug()<<td;
+
 if(abs(td-(d1+d2))<.2)
   {
           return true;
@@ -101,6 +100,22 @@ return false;
 QString LineComponent::componentName()
 {
     return "Line";
+}
+
+QJsonObject *LineComponent::toJsonObject()
+{
+
+    QJsonObject *obj=new QJsonObject();
+
+    obj->insert("code",2);
+    obj->insert("x",this->getX());
+    obj->insert("y",this->getY());
+    obj->insert("x2",this->getX2());
+    obj->insert("y2",this->getY2());
+   obj->insert("color",this->getPen()->color().name());
+    obj->insert("pwidth",this->getPen()->width());
+
+    return obj;
 }
 
 void LineComponent::select(QPainter *p)

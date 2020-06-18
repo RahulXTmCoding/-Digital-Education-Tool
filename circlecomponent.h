@@ -15,6 +15,7 @@ public:
     void draw(QPainter *painter);
     bool isClicked(QPoint *);
     QString componentName();
+    QJsonObject *toJsonObject();
      void select(QPainter *p);
     void update(int x,int y);
     double getX() const;

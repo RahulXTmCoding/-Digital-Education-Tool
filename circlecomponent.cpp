@@ -60,7 +60,7 @@ void CircleComponent::draw(QPainter *painter)
 {
     if(pen==NULL)
     {
-        qDebug()<<"set hua pen";
+
 
         pen=new QPen();
         pen->setWidth(painter->pen().width());
@@ -81,7 +81,22 @@ return false;
 
 QString CircleComponent::componentName()
 {
-return "Circle";
+    return "Circle";
+}
+
+QJsonObject *CircleComponent::toJsonObject()
+{
+QJsonObject *obj=new QJsonObject();
+
+obj->insert("code",4);
+obj->insert("x",this->getX());
+obj->insert("y",this->getY());
+obj->insert("radius",this->getRadius());
+
+obj->insert("color",this->getPen()->color().name());
+obj->insert("pwidth",this->getPen()->width());
+
+return obj;
 }
 
 void CircleComponent::select(QPainter *p)

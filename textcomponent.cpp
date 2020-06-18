@@ -69,7 +69,23 @@ return false;
 
 QString TextComponent::componentName()
 {
-return "Text Component";
+    return "Text Component";
+}
+
+QJsonObject *TextComponent::toJsonObject()
+{
+
+    QJsonObject *obj=new QJsonObject();
+
+    obj->insert("code",6);
+    obj->insert("x",this->getX());
+    obj->insert("y",this->getY());
+    obj->insert("text",this->getText());
+    obj->insert("color",this->getPen()->color().name());
+    obj->insert("pwidth",this->getPen()->width());
+
+    return obj;
+
 }
 
 void TextComponent::select(QPainter *p)

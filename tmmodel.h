@@ -3,6 +3,13 @@
 #include "drawablecomponent.h"
 #include <QList>
 #include <QListWidget>
+#include "textcomponent.h"
+#include <QPair>
+#include "linescompoent.h"
+#include "ellipsecomponent.h"
+#include "rectanglecomponent.h"
+#include "linecomponent.h"
+#include "circlecomponent.h"
 class TmModel
 {
 private:
@@ -11,14 +18,29 @@ private:
     QList<DrawableComponent *> *tempDrawables;
 
     QListWidget *dsList;
+    QList<QPair<int, DrawableComponent *> *> selectedList;
     int selectedInex=-1;
+    QList<QList<QPair<int,DrawableComponent *> *> *> groups;
+    QList<int> selectedGroups;
+    int selectedGroup=-1;
     DrawableComponent *selectedComponent=NULL;
     int initialX;
     int initialY;
 public:
     TmModel();
+    void clear();
+    QString save();
+    void selectAll(QModelIndexList il);
+    void deleteSelected();
+    int controllKey=-1;
+    void open(QJsonArray &arr);
+    void groupSelected();
+    void ungroupSelected();
+    void update(int,int);
     void add(DrawableComponent *);
     void draw(QPainter *);
+    void addSelected(QPair<int,DrawableComponent *> *);
+    void clearSelected();
     void setDsList(QListWidget *value);
     QListWidget *getDsList() const;
     int getSelectedInex() const;
@@ -26,6 +48,8 @@ public:
     DrawableComponent *getSelectedComponent() const;
     void setSelectedComponent(DrawableComponent *value);
     void findClicked(QPoint *);
+     void clickedRemove(QPoint *);
+     bool selection=false;
     QList<DrawableComponent *> *getDrawables() const;
     int getInitialX() const;
     void setInitialX(int value);
@@ -33,6 +57,8 @@ public:
     void setInitialY(int value);
     void undo();
     void redo();
+    int getControllKey() const;
+    void setControllKey(int value);
 };
 
 #endif // TMMODEL_H

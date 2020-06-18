@@ -15,6 +15,42 @@ Canvas::Canvas( QWidget* parent )
     this->setFocusPolicy(Qt::StrongFocus);
 }
 
+void Canvas::selectAll(QModelIndexList il)
+{
+ this->model->selectAll(il);
+    update();
+}
+
+void Canvas::groupSelected()
+{
+    this->model->groupSelected();
+update();
+}
+
+void Canvas::ungroupSelected()
+{
+    this->model->ungroupSelected();
+update();
+}
+
+
+
+void Canvas::clear()
+{
+    this->model->clear();
+}
+
+QString Canvas::save()
+{
+    return this->model->save();
+}
+
+void Canvas::open(QJsonArray &arr)
+{
+    this->model->open(arr);
+    update();
+}
+
 QColor Canvas::getColor() const
 {
     return color;
@@ -23,6 +59,10 @@ QColor Canvas::getColor() const
 void Canvas::setColor(const QColor &value)
 {
     color = value;
+
+    this->model->setSelectedInex(-1);
+    this->model->setSelectedComponent(NULL);
+    update();
 }
 
 int Canvas::getPenWidth() const
@@ -33,6 +73,10 @@ int Canvas::getPenWidth() const
 void Canvas::setPenWidth(int value)
 {
     penWidth = value;
+    this->model->setSelectedInex(-1);
+    this->model->setSelectedComponent(NULL);
+    update();
+
 }
 
 QBrush *Canvas::getBrush() const
@@ -62,7 +106,14 @@ int Canvas::getMode() const
 
 void Canvas::setMode(int value)
 {
-    mode = value;
+     mode = value;
+    if(value!=0)
+    {
+        this->model->clearSelected();
+
+    }update();
+
+
 }
 
 
@@ -157,14 +208,16 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
        {
         int movedX=event->x()-this->model->getInitialX();
         int movedY=event->y()-this->model->getInitialY();
-        qDebug()<<"******"<<movedX<<"  ******"<<movedY;
+
         this->model->setInitialX(event->x());
         this->model->setInitialY(event->y());
-        if(this->model->getSelectedInex()!=-1)
+        /*if(this->model->getSelectedInex()!=-1)
         {
             this->model->getSelectedComponent()->update(movedX,movedY);
         }
-
+*/
+        this->model->update(movedX,movedY);
+        this->model->selection=false;
        }
 
     update();
@@ -229,6 +282,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
     if(mode==0)
     {
         this->model->findClicked(new QPoint(event->x(),event->y()));
+
         this->model->setInitialX(event->x());
         this->model->setInitialY(event->y());
         update();
@@ -246,6 +300,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
   if(this->lineTemp->getPoints()->length()>2)
   {
   this->model->add(lineTemp);
+  lineTemp=NULL;
   }
   }
   else
@@ -316,6 +371,12 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
               //update();
           }
       }
+  else
+     if(mode==0)
+     {
+
+         this->model->clickedRemove(new QPoint(event->x(),event->y()));
+     }
 
   update();
 }
@@ -323,8 +384,34 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 void Canvas::keyPressEvent(QKeyEvent *event)
 {
 
-this->model->getDrawables()->removeAt(this->model->getSelectedInex());
- this->model->setSelectedInex(-1);
-    this->model->setSelectedComponent(NULL);
-    this->update();
+    if(event->key()==Qt::Key_Control)
+    {
+        this->model->setControllKey(Qt::Key_Control);
+    }
+if(event->key()==Qt::Key_Delete)
+{
+this->model->deleteSelected();
+
+
+     this->update();
+}
+}
+
+void Canvas::keyReleaseEvent(QKeyEvent *ev)
+{
+    if(ev->key()==Qt::Key_Control)
+    {
+        this->model->setControllKey(-1);
+    }
+}
+
+void Canvas::enterEvent(QEvent *event)
+{
+    setCursor(QCursor(QPixmap(":/images/feather.png"),4,62));
+
+}
+
+void Canvas::leaveEvent(QEvent *event)
+{
+
 }

@@ -70,7 +70,7 @@ void EllipseComponent::draw(QPainter *painter)
 
     if(pen==NULL)
     {
-        qDebug()<<"set hua pen";
+
 
         pen=new QPen();
         pen->setWidth(painter->pen().width());
@@ -85,11 +85,38 @@ void EllipseComponent::draw(QPainter *painter)
 
 bool EllipseComponent::isClicked(QPoint *point)
 {
-  if(sqrt((point->x()-this->getX())*(this->getX()+this->getWidth()-point->x()))*sqrt((point->y()-this->getY())*(this->getY()+this->getHeight()-point->y()))>=0)
+
+    QPainterPath *path=new QPainterPath();
+    path->addEllipse(this->getX(),this->getY(),this->getWidth(),this->getHeight());
+    if(path->contains(*point))
+    {return true;}
+
+
+
+
+
+  /*if(sqrt((point->x()-this->getX())*(this->getX()+this->getWidth()-point->x()))*sqrt((point->y()-this->getY())*(this->getY()+this->getHeight()-point->y()))>=0)
   {
       return true;
   }
-return false;
+  */
+    return false;
+}
+
+QJsonObject *EllipseComponent::toJsonObject()
+{
+    QJsonObject *obj=new QJsonObject();
+
+    obj->insert("code",5);
+    obj->insert("x",this->getX());
+    obj->insert("y",this->getY());
+    obj->insert("width",this->getWidth());
+    obj->insert("height",this->getHeight());
+    obj->insert("color",this->getPen()->color().name());
+    obj->insert("pwidth",this->getPen()->width());
+
+    return obj;
+
 }
 
 QString EllipseComponent::componentName()

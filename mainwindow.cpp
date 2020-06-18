@@ -7,35 +7,60 @@
 #include "linescompoent.h"
 #include "ellipsecomponent.h"
 #include <QDebug>
+#include <QFileDialog>
+#include <QJsonDocument>
+#include <QtGui>
+#include <QAbstractItemView>
+#include <QDesktopWidget>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
+
+    this->ui->canvas->setSizePolicy(QSizePolicy::Expanding,
+                               QSizePolicy::Expanding);
+
     //this->scene->setSceneRect(this->ui->graphicsView->sceneRect());
     this->ui->textFrame->hide();
     this->ui->textFrame->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
     this->ui->textFrame->move(QPoint(200,200));
-    this->ui->polyLines->hide();
-    this->ui->polyLines->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
-    this->ui->polyLines->move(QPoint(200,200));
+    this->ui->toolbox->setMinimumHeight(820);
+    this->ui->dslistbox->setMinimumHeight(810);
+    this->resize(QDesktopWidget().availableGeometry(this).size()* 1);
+    setFixedSize(QDesktopWidget().availableGeometry(this).size()* 1);
+     this->ui->background->resize(QDesktopWidget().availableGeometry(this).size()* 1);
+     double width=this->width()-245;
+     double height=this->height();
+     this->ui->canvas->resize(width,height);
+     this->ui->dslistbox->move(this->ui->canvas->width()+this->ui->canvas->x()+5,3);
+     this->ui->dslistbox->resize(this->ui->dslistbox->width(),this->ui->canvas->height());
+     this->ui->DsList->resize(this->ui->DsList->width(),this->ui->canvas->height());
+     this->ui->toolbox->resize(this->ui->toolbox->width(),this->ui->canvas->height());
+     this->ui->toolL->move(16,9);
     this->ui->canvas->model->setDsList(this->ui->DsList);
     this->ui->canvas->c_x=this->ui->canvas->x();
     this->ui->canvas->c_y=this->ui->canvas->y();
     this->ui->canvas->c_width=this->ui->canvas->width();
     this->ui->canvas->c_height=this->ui->canvas->height();
-    this->ui->EllipseFrame->hide();
-    this->ui->EllipseFrame->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
-    this->ui->EllipseFrame->move(QPoint(200,200));
+    this->ui->DsList->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
     this->ui->line->setIcon(QIcon(":/images/line.png"));
-    this->ui->elipse->setIcon(QIcon(":/images/oval.png"));
+    this->ui->ellipsepush->setIcon(QIcon(":/images/oval.png"));
     this->ui->circle->setIcon(QIcon(":/images/plain.png"));
     this->ui->polylinedraw->setIcon(QIcon(":/images/pencil.png"));
     this->ui->S_and_M->setIcon(QIcon(":/images/move.png"));
     this->ui->textDraw_5->setIcon(QIcon(":/images/rectangle.png"));
     this->ui->textDraw->setIcon(QIcon(":/images/text.png"));
 
+
+    this->ui->Clear->setIcon(QIcon(":/images/cross.png"));
+    this->ui->Save->setIcon(QIcon(":/images/save.png"));
+    this->ui->open->setIcon(QIcon(":/images/book.png"));
+      this->ui->del->setIcon(QIcon(":/images/bin.png"));
+     this->ui->group->setIcon(QIcon(":/images/group.png"));
+     this->ui->ungroup->setIcon(QIcon(":/images/ungroup.png"));
     this->ui->c1->setStyleSheet("background-color: red");
     this->ui->c2->setStyleSheet("background-color: black");
     this->ui->c3->setStyleSheet("background-color: yellow");
@@ -59,6 +84,26 @@ this->ui->textFrame->show();
 void MainWindow::paintEvent(QPaintEvent *paint)
 {
 
+
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+
+    this->ui->background->resize(this->size()* 1);
+    double width=this->width()-245;
+    double height=this->height()*.9;
+    this->ui->canvas->resize(width,height);
+    this->ui->dslistbox->move(this->ui->canvas->width()+this->ui->canvas->x()+5,3);
+    this->ui->dslistbox->resize(this->ui->dslistbox->width(),height+18);
+    this->ui->DsList->resize(this->ui->DsList->width(),height+18);
+    this->ui->toolbox->resize(this->ui->toolbox->width(),height+28);
+   this->ui->canvas->c_x=this->ui->canvas->x();
+   this->ui->canvas->c_y=this->ui->canvas->y();
+   this->ui->canvas->c_width=this->ui->canvas->width();
+   this->ui->canvas->c_height=this->ui->canvas->height();
+
+    qDebug()<<this->ui->canvas->height()<<"     "<<this->ui->toolbox->height()<<"    "<<this->ui->dslistbox->height();
 
 }
 
@@ -134,172 +179,7 @@ void MainWindow::on_cancle_text_clicked()
 
 }
 
-void MainWindow::on_addPoints_clicked()
-{
-this->points->append(new QPoint(this->ui->newPointXpolyLine->text().toFloat(),this->ui->newPointYpolyLine->text().toFloat()));
- this->ui->newPointXpolyLine->clear();
-    this->ui->newPointYpolyLine->clear();
-}
 
-void MainWindow::on_DrawLines_clicked()
-{
-    if(this->points->size()<=1)
-    {
-        return;
-    }
-    LinesCompoent *lc=new LinesCompoent();
-    lc->setPoints(this->points);
-    QString color=this->ui->polyColor->currentText();
-    if(color=="red")
-    {
-    lc->setPen(new QPen(QBrush(Qt::red),this->ui->PenwidthpolyLine->text().toFloat()));
-    }
-    else
-    if(color=="black")
-    {
-    lc->setPen(new QPen(QBrush(Qt::black),this->ui->PenwidthpolyLine->text().toFloat()));
-    }
-    else
-    if(color=="blue")
-    {
-    lc->setPen(new QPen(QBrush(Qt::blue),this->ui->PenwidthpolyLine->text().toFloat()));
-    }else
-    if(color=="yellow")
-    {
-     lc->setPen(new QPen(QBrush(Qt::yellow),this->ui->PenwidthpolyLine->text().toFloat()));
-    }
-     else
-     if(color=="pink")
-     {
-     lc->setPen(new QPen(QBrush(Qt::PinchGesture),this->ui->PenwidthpolyLine->text().toFloat()));
-     }
-     else
-     if(color=="green")
-     {
-     lc->setPen(new QPen(QBrush(Qt::green),this->ui->PenwidthpolyLine->text().toFloat()));
-     }
-
-    this->ui->canvas->model->add(lc);
-    this->ui->canvas->update();
-    this->ui->polyLines->hide();
-
-    this->ui->PenwidthpolyLine->clear();
-
-}
-
-void MainWindow::on_Cancle_lines_clicked()
-{
-    this->ui->polyLines->hide();
-
-    this->ui->PenwidthpolyLine->clear();
-
-}
-
-void MainWindow::on_elipse_clicked()
-{
-    this->ui->canvas->setMode(5);
-
-}
-
-void MainWindow::on_Draw_Ellipse_clicked()
-{
-
-    EllipseComponent *ec=new EllipseComponent();
-
-    QString color=this->ui->color_ellipse_pen->currentText();
-    if(color=="red")
-    {
-    ec->setPen(new QPen(QBrush(Qt::red),this->ui->Penwidth_ellipse->text().toFloat()));
-    }
-    else
-    if(color=="black")
-    {
-    ec->setPen(new QPen(QBrush(Qt::black),this->ui->Penwidth_ellipse->text().toFloat()));
-    }
-    else
-    if(color=="blue")
-    {
-    ec->setPen(new QPen(QBrush(Qt::blue),this->ui->Penwidth_ellipse->text().toFloat()));
-    }else
-    if(color=="yellow")
-    {
-     ec->setPen(new QPen(QBrush(Qt::yellow),this->ui->Penwidth_ellipse->text().toFloat()));
-    }
-     else
-     if(color=="pink")
-     {
-     ec->setPen(new QPen(QBrush(Qt::PinchGesture),this->ui->Penwidth_ellipse->text().toFloat()));
-     }
-     else
-     if(color=="green")
-     {
-     ec->setPen(new QPen(QBrush(Qt::green),this->ui->Penwidth_ellipse->text().toFloat()));
-     }
-
-
-  color=this->ui->color_ellipse_Brush->currentText();
-    if(color=="red")
-    {
-    ec->setBrush(new QBrush(Qt::red));
-    }
-    else
-    if(color=="black")
-    {
-    ec->setBrush(new QBrush(Qt::black));
-    }
-    else
-    if(color=="blue")
-    {
-    ec->setBrush(new QBrush(Qt::blue));
-    }else
-    if(color=="yellow")
-    {
-    ec->setBrush(new QBrush(Qt::yellow));
-    }
-     else
-     if(color=="pink")
-     {
-     ec->setBrush(new QBrush(Qt::PinchGesture));
-     }
-     else
-     if(color=="green")
-     {
-     ec->setBrush(new QBrush(Qt::green));
-     }
-    else
-     {
-         ec->setBrush(new QBrush(Qt::white));
-     }
-
-    ec->setX(this->ui->X_CORD_ellipse->text().toFloat());
-    ec->setY(this->ui->Y_CORD_ellipse->text().toFloat());
-    ec->setWidth(this->ui->width_ellipse->text().toFloat());
-    ec->setHeight(this->ui->height_elipse->text().toFloat());
-     this->ui->canvas->model->add(ec);
-    this->ui->canvas->update();
-
-
-
-    this->ui->EllipseFrame->hide();
-    this->ui->X_CORD_ellipse->clear();
-    this->ui->Y_CORD_ellipse->clear();
-    this->ui->width_ellipse->clear();
-    this->ui->height_elipse->clear();
-    this->ui->Penwidth_ellipse->clear();
-
-
-}
-
-void MainWindow::on_cancle_ellipse_clicked()
-{
-
-    this->ui->EllipseFrame->hide();
-    this->ui->X_CORD_ellipse->clear();
-    this->ui->Y_CORD_ellipse->clear();
-    this->ui->width_ellipse->clear();
-    this->ui->height_elipse->clear();
-    this->ui->Penwidth_ellipse->clear();
-}
 
 void MainWindow::on_textDraw_5_clicked()
 {
@@ -323,9 +203,11 @@ this->ui->canvas->setMode(0);
 
 void MainWindow::on_DsList_itemClicked(QListWidgetItem *item)
 {
-    this->ui->canvas->model->setSelectedInex(this->ui->canvas->model->getDrawables()->size()-1-this->ui->DsList->currentRow());
-    this->ui->canvas->model->setSelectedComponent(this->ui->canvas->model->getDrawables()->at(this->ui->canvas->model->getDrawables()->size()-1-this->ui->DsList->currentRow()));
-    update();
+    QModelIndexList il=this->ui->DsList->selectionModel()->selectedIndexes();
+   this->ui->canvas->selectAll(il);
+    //this->ui->canvas->model->setSelectedInex(this->ui->canvas->model->getDrawables()->size()-1-this->ui->DsList->currentRow());
+    //this->ui->canvas->model->setSelectedComponent();
+   this->ui->canvas->setMode(0);
 }
 
 void MainWindow::on_c1_clicked()
@@ -379,4 +261,78 @@ void MainWindow::on_redo_clicked()
 {
     this->ui->canvas->model->redo();
     update();
+}
+
+void MainWindow::on_ellipsepush_clicked()
+{
+    this->ui->canvas->setMode(5);
+}
+
+void MainWindow::on_Clear_clicked()
+{
+this->ui->canvas->clear();
+    update();
+}
+
+void MainWindow::on_Save_clicked()
+{
+
+QString fileName = QFileDialog::getSaveFileName(this, ("Save File"),"/home",("text (*.txt)"));
+if(fileName!=NULL)
+{
+ QString jsonS=this->ui->canvas->save();
+ QFile file(fileName);
+ if(file.exists())
+ {
+ file.remove();
+ }
+     if (file.open(QIODevice::ReadWrite)) {
+
+         QTextStream stream(&file);
+         stream <<jsonS<< endl;
+     }
+}
+}
+
+void MainWindow::on_open_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, ("Open File"), "/home",("text (*.txt)"));
+    if(fileName!=NULL)
+    {
+     QFile file(fileName);
+     if(file.open(QIODevice::ReadOnly))
+     {
+         QTextStream stream(&file);
+         QString str= stream.readAll();
+         QJsonDocument *d=new QJsonDocument();
+         QJsonArray arr=(d->fromJson(str.toUtf8())).array();
+         this->ui->canvas->open(arr);
+     }
+    qDebug()<<"open call hua";
+    }
+
+}
+
+void MainWindow::on_DsList_itemSelectionChanged()
+{
+
+
+   //this->ui->canvas->select(this->ui->canvas->model->getDrawables()->size()-1-this->ui->DsList->currentRow(),this->ui->canvas->model->getDrawables()->at(this->ui->canvas->model->getDrawables()->size()-1-this->ui->DsList->currentRow()));
+
+}
+
+void MainWindow::on_group_clicked()
+{
+    this->ui->canvas->groupSelected();
+}
+
+void MainWindow::on_ungroup_clicked()
+{
+    this->ui->canvas->ungroupSelected();
+}
+
+void MainWindow::on_del_clicked()
+{
+    this->ui->canvas->model->deleteSelected();
+    this->ui->canvas->update();
 }

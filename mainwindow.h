@@ -21,7 +21,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     virtual void paintEvent(QPaintEvent * paint);
+    void resizeEvent(QResizeEvent* event);
     QGraphicsScene *scene;
+    QList<QFrame *> *Frames;
 
     QList<QPoint *> *points;
 
@@ -33,18 +35,6 @@ private slots:
     void on_Draw_Text_clicked();
 
     void on_cancle_text_clicked();
-
-    void on_addPoints_clicked();
-
-    void on_DrawLines_clicked();
-
-    void on_Cancle_lines_clicked();
-
-    void on_elipse_clicked();
-
-    void on_Draw_Ellipse_clicked();
-
-    void on_cancle_ellipse_clicked();
 
     void on_textDraw_5_clicked();
 
@@ -72,9 +62,26 @@ private slots:
 
     void on_penWidth_valueChanged(int arg1);
 
+
     void on_undo_clicked();
 
     void on_redo_clicked();
+
+    void on_ellipsepush_clicked();
+
+    void on_Clear_clicked();
+
+    void on_Save_clicked();
+
+    void on_open_clicked();
+
+    void on_DsList_itemSelectionChanged();
+
+    void on_group_clicked();
+
+    void on_ungroup_clicked();
+
+    void on_del_clicked();
 
 private:
     Ui::MainWindow *ui;

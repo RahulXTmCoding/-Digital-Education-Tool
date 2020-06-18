@@ -74,7 +74,7 @@ void RectangleComponent::draw(QPainter *painter)
 
     if(pen==NULL)
     {
-        qDebug()<<"set hua pen";
+
 
         pen=new QPen();
         pen->setWidth(painter->pen().width());
@@ -87,22 +87,42 @@ void RectangleComponent::draw(QPainter *painter)
 bool RectangleComponent::isClicked(QPoint *point)
 {
 
+    QPainterPath *path=new QPainterPath();
+    path->addRect(this->getX(),this->getY(),this->getWidth(),this->getHeight());
+    if(path->contains(*point))
+    {return true;}
 
    /* if(point->y()>=this->getY() and point->y()<=(this->getY()+this->height) and point->x()>=this->getX() and point->x()<=(this->getX()+this->getWidth()))
     {
         return true;
     }
-    */
+
     if(sqrt((point->x()-this->getX())*(this->getX()+this->getWidth()-point->x()))*sqrt((point->y()-this->getY())*(this->getY()+this->getHeight()-point->y()))>=0)
     {
         return true;
     }
+    */
     return false;
 }
 
 QString RectangleComponent::componentName()
 {
     return "Rectangle";
+}
+
+QJsonObject *RectangleComponent::toJsonObject()
+{
+
+    QJsonObject *obj=new QJsonObject();
+    obj->insert("code",3);
+    obj->insert("x",this->getX());
+    obj->insert("y",this->getY());
+    obj->insert("width",this->getWidth());
+    obj->insert("height",this->getHeight());
+   obj->insert("color",this->getPen()->color().name());
+    obj->insert("pwidth",this->getPen()->width());
+
+    return obj;
 }
 
 void RectangleComponent::select(QPainter *p)
