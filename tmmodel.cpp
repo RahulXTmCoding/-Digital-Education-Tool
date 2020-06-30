@@ -2,6 +2,7 @@
 #include<QJsonDocument>
 #include<QJsonObject>
 #include<QJsonArray>
+
 void TmModel::setDsList(QListWidget *value)
 {
     dsList = value;
@@ -35,19 +36,19 @@ void TmModel::setSelectedComponent(DrawableComponent *value)
 void TmModel::findClicked(QPoint *point)
 {
     DrawableComponent *d;
-   qDebug()<< groups.size()<<"find clicked pe click hi hua just";
+
     for(int k=groups.size()-1;k>=0;k--)
     {
         QList<QPair<int,DrawableComponent *> *> *ll=groups.at(k);
-        qDebug()<< "inner loop se phle";
+
         for(int j=0;j<ll->size();j++)
         {
 
     d=ll->at(j)->second;
-    qDebug()<< "inner loop ke andar";
+
 if(d->isClicked(point))
 {
-    qDebug()<< "inner loop clicked";
+
     if(controllKey!=-1)
     {
      for(int f=0;f<selectedGroups.size();f++)
@@ -60,21 +61,21 @@ if(d->isClicked(point))
     }
     else
     {
-        qDebug()<< "inner loop else mai";
+
 selectedList=*(groups.at(k));
 selectedGroup=k;
 
 selectedGroups.clear();
 selectedGroups.append(k);
-qDebug()<< "else end phle";
+
     }
-qDebug()<< "return e";
+
 return;
 }
     }
 }
 
-qDebug()<< groups.size()<<"list se phle wala";
+
     for(int k=0;k<selectedList.size();k++)
     {
     d=selectedList.at(k)->second;
@@ -216,6 +217,20 @@ TmModel::TmModel()
     this->tempDrawables=new QList<DrawableComponent *>();
 }
 
+void TmModel::drawPixmap(QString path)
+{
+    PixmapComponent *pixmap=new PixmapComponent();
+    pixmap->setPath(path);
+    QPixmap *pix=new QPixmap(path);
+    pixmap->setX(50);
+    pixmap->setY(50);
+    pixmap->setWidth(300);
+    pixmap->setHeight(300*(pix->height()/pix->width()));
+    pixmap->setMap(pix);
+    pixmap->setParent(this);
+    drawables->append(pixmap);
+}
+
 void TmModel::clear()
 {
     this->drawables->clear();
@@ -224,7 +239,19 @@ void TmModel::clear()
     this->groups.clear();
 }
 
-QString TmModel::save()
+void TmModel::changeComponentName(QString name, QModelIndexList li)
+{
+    for(QModelIndex index:li)
+    {
+       int i=this->getDrawables()->size()-1-index.row();
+       DrawableComponent *d=drawables->at(i);
+
+       d->changeCompoentName(name);
+    }
+
+}
+
+QJsonObject * TmModel::save()
 {
 QJsonArray *arr=new QJsonArray();
 int i=0;
@@ -234,8 +261,10 @@ for(;i<this->drawables->length();i++)
     d=this->drawables->at(i);
     arr->push_back(*(d->toJsonObject()));
 }
+QJsonObject *ob=new QJsonObject();
+ob->insert("canvas",*arr);
 
-return (new QJsonDocument(*arr))->toJson();
+return (ob);
 }
 
 void TmModel::selectAll(QModelIndexList il)
@@ -275,7 +304,7 @@ void TmModel::deleteSelected()
  selectedGroups.removeOne(selectedGroup);
  QList<QPair<int,DrawableComponent *> *> *l=groups.at(selectedGroup);
 int gn=selectedGroup;
-qDebug()<< groups.size()<<"sabse phle detele mai";
+
  groups.removeAt(selectedGroup);
  for(int i=0;i<l->size();i++)
  {
@@ -288,7 +317,7 @@ qDebug()<< groups.size()<<"sabse phle detele mai";
              {
                  groups.removeAt(k);
                  gn--;
-                 qDebug()<< groups.size()<<"loop ke andar delete";
+
                  break;
              }
          }
@@ -306,6 +335,16 @@ qDebug()<< groups.size()<<"sabse phle detele mai";
 selectedGroup=-1;
 
 
+}
+
+int TmModel::getShiftKey()
+{
+    return shiftKey;
+}
+
+void TmModel::setShiftKey(int value)
+{
+    shiftKey = value;
 }
 
 
@@ -344,6 +383,7 @@ void TmModel::open(QJsonArray &arr)
         p->setColor(obj["color"].toString());
         p->setWidth(obj["pwidth"].toInt());
         comp->setPen(p);
+        comp->setParent(this);
         drawables->append(comp);
 
        }
@@ -359,6 +399,7 @@ void TmModel::open(QJsonArray &arr)
             p->setColor(obj["color"].toString());
             p->setWidth(obj["pwidth"].toInt());
             comp->setPen(p);
+            comp->setParent(this);
             drawables->append(comp);
 
            }
@@ -374,6 +415,7 @@ void TmModel::open(QJsonArray &arr)
                 p->setColor(obj["color"].toString());
                 p->setWidth(obj["pwidth"].toInt());
                 rect->setPen(p);
+                rect->setParent(this);
                 drawables->append(rect);
 
                }
@@ -388,6 +430,7 @@ void TmModel::open(QJsonArray &arr)
                 p->setColor(obj["color"].toString());
                 p->setWidth(obj["pwidth"].toInt());
                 comp->setPen(p);
+                comp->setParent(this);
                 drawables->append(comp);
 
                }
@@ -403,6 +446,7 @@ void TmModel::open(QJsonArray &arr)
                     p->setColor(obj["color"].toString());
                     p->setWidth(obj["pwidth"].toInt());
                     comp->setPen(p);
+                    comp->setParent(this);
                     drawables->append(comp);
 
                    }
@@ -418,9 +462,25 @@ void TmModel::open(QJsonArray &arr)
                         p->setColor(obj["color"].toString());
                         p->setWidth(obj["pwidth"].toInt());
                         comp->setPen(p);
+                        comp->setParent(this);
                         drawables->append(comp);
 
                        }
+       else
+                           if(code==8)
+                           {
+                               PixmapComponent *comp=new PixmapComponent();
+                               comp->setWidth(obj["width"].toDouble());
+                               comp->setHeight(obj["height"].toDouble());
+                               comp->setX(obj["x"].toInt());
+                               comp->setY(obj["y"].toInt());
+                               comp->setPath(obj["path"].toString() );
+                                QPixmap *pix=new QPixmap(comp->getPath());
+                                comp->setMap(pix);
+                                comp->setParent(this);
+                            drawables->append(comp);
+
+                           }
 
     }
 }
@@ -453,7 +513,11 @@ void TmModel::update(int movedX, int movedY)
     {
         for(int i=0;i<selectedList.size();i++)
         {
-            selectedList.at(i)->second->update(movedX,movedY);
+            if(selectedList.size()!=1)
+            {
+             selectedList.at(i)->second->setRectNo(0);
+           }
+             selectedList.at(i)->second->update(movedX,movedY);
         }
     }
 }
@@ -484,7 +548,7 @@ void TmModel::draw(QPainter *painter)
     d->select(painter);
 */
     painter->setPen(QPen(Qt::black,3));
-    qDebug()<< "selected list sdraw mai phle";
+
     for(i=0;i<this->selectedList.size();i++)
     {
      d=this->selectedList.at(i)->second;

@@ -25,6 +25,16 @@ int LineComponent::getX2() const
     return x2;
 }
 
+void LineComponent::setParent(AModel *model)
+{
+     parent=model;
+}
+
+AModel *LineComponent::getParent()
+{
+    return parent;
+}
+
 void LineComponent::setX2(int value)
 {
     x2 = value;
@@ -60,6 +70,16 @@ void LineComponent::setBrush(QBrush *value)
     brush = value;
 }
 
+int LineComponent::getRectNo()
+{
+    return rectNo;
+}
+
+void LineComponent::setRectNo(int value)
+{
+    rectNo = value;
+}
+
 LineComponent::LineComponent()
 {
     pen=NULL;
@@ -83,6 +103,31 @@ void LineComponent::draw(QPainter *painter)
 
 bool LineComponent::isClicked(QPoint *point)
 {
+    QPainterPath *path=new QPainterPath();
+if(getRectNo()!=-1)
+   {
+    path=new QPainterPath();
+   path->addRect(x-5,y-5,10,10);
+   if(path->contains(*point))
+   {
+       setRectNo(1);
+return true;
+   }
+   path=new QPainterPath();
+  path->addRect(x2-5,y2-5,10,10);
+  if(path->contains(*point))
+  {
+      setRectNo(2);
+return true;
+  }
+
+
+}
+
+
+
+
+
   double d1;
   double d2;
   double td;
@@ -92,14 +137,21 @@ bool LineComponent::isClicked(QPoint *point)
 
 if(abs(td-(d1+d2))<.2)
   {
+    setRectNo(0);
           return true;
 }
+setRectNo(-1);
 return false;
 }
 
 QString LineComponent::componentName()
 {
-    return "Line";
+    return name;
+}
+
+void LineComponent::changeCompoentName(QString name)
+{
+this->name=name;
 }
 
 QJsonObject *LineComponent::toJsonObject()
@@ -126,8 +178,26 @@ void LineComponent::select(QPainter *p)
 
 void LineComponent::update(int x, int y)
 {
+    int rect=getRectNo();
+    if(rect==0)
+    {
     this->setX(this->getX()+x);
     this->setX2(this->getX2()+x);
     this->setY(this->getY()+y);
     this->setY2(this->getY2()+y);
+    }
+    else
+    if(rect==1)
+    {
+        this->setX(this->getX()+x);
+
+        this->setY(this->getY()+y);
+    }
+    else
+        if(rect==2)
+        {
+            this->setX2(this->getX2()+x);
+
+            this->setY2(this->getY2()+y);
+        }
 }

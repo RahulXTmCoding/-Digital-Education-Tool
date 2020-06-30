@@ -10,11 +10,15 @@ class CircleComponent:public DrawableComponent
     double radius;
     QPen *pen;
     QBrush *brush;
+    int rectNo;
+    QString name="Circle";
+    AModel * parent;
 public:
     CircleComponent();
     void draw(QPainter *painter);
     bool isClicked(QPoint *);
     QString componentName();
+    void changeCompoentName(QString name);
     QJsonObject *toJsonObject();
      void select(QPainter *p);
     void update(int x,int y);
@@ -27,7 +31,11 @@ public:
     QPen *getPen() const;
     void setPen(QPen *value);
     QBrush *getBrush() const;
+     void setParent(AModel *model);
+     AModel * getParent();
     void setBrush(QBrush *value);
+    int getRectNo();
+    void setRectNo(int value);
 };
 
 #endif // CIRCLECOMPONENT_H

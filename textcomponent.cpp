@@ -20,6 +20,16 @@ void TextComponent::setPen(QPen *value)
     pen = value;
 }
 
+void TextComponent::setParent(AModel *model)
+{
+     parent=model;
+}
+
+AModel *TextComponent::getParent()
+{
+    return parent;
+}
+
 QString TextComponent::getText() const
 {
     return text;
@@ -50,14 +60,24 @@ void TextComponent::setY(float value)
     y = value;
 }
 
+int TextComponent::getRectNo()
+{
+    return rectNo;
+}
+
+void TextComponent::setRectNo(int value)
+{
+    rectNo = value;
+}
+
 TextComponent::TextComponent()
 {
     pen=NULL;
-
+    
 }
 void TextComponent::draw(QPainter *painter)
 {
-painter->setPen(*(this->getPen()));
+    painter->setPen(*(this->getPen()));
 painter->setFont(*(this->getFont()));
 painter->drawText(QPoint(this->getX(),this->getY()),this->getText());
 }
@@ -69,7 +89,7 @@ return false;
 
 QString TextComponent::componentName()
 {
-    return "Text Component";
+    return name;
 }
 
 QJsonObject *TextComponent::toJsonObject()
@@ -95,5 +115,12 @@ void TextComponent::select(QPainter *p)
 
 void TextComponent::update(int x, int y)
 {
+
+}
+
+void TextComponent::changeCompoentName(QString name)
+{
+this->name=name;
+
 
 }

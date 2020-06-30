@@ -9,6 +9,9 @@
 #include "tmmodel.h"
 #include <QList>
 #include <QPoint>
+#include "canvas.h"
+#include <QRadioButton>
+#include <QPushButton>
 namespace Ui {
 class MainWindow;
 }
@@ -20,15 +23,26 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    virtual void paintEvent(QPaintEvent * paint);
+
     void resizeEvent(QResizeEvent* event);
     QGraphicsScene *scene;
     QList<QFrame *> *Frames;
+     QPushButton *closeButton;
 
     QList<QPoint *> *points;
-
+    QList<Canvas *> *canvasList;
+    Canvas *selectedCanvas;
+    QList<QRadioButton *> *radioList;
+     QList<QListWidget *> *listWidgets;
+    int selectedCanvasIndex=0;
+      QScrollArea *scroll;
+      void showContextMenu(const QPoint &pos);
+      void editQList();
+      void deleteQList();
+    void changeCanvas();
 private slots:
     void on_textDraw_clicked();
+
 
     void on_polylinedraw_clicked();
 
@@ -82,6 +96,24 @@ private slots:
     void on_ungroup_clicked();
 
     void on_del_clicked();
+
+    void on_new_canvas_clicked();
+
+    void on_ff_clicked();
+
+
+
+    void on_pixmap_clicked();
+
+    void on_colourgradient_clicked();
+
+    void on_recording_clicked();
+
+    void on_stop_recording_clicked();
+
+    void on_physics_drawings_clicked();
+
+    void on_close_physics_book_clicked();
 
 private:
     Ui::MainWindow *ui;

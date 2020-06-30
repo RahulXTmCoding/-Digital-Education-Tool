@@ -1,0 +1,104 @@
+[
+    {
+        "canvas": [
+            {
+                "code": 3,
+                "color": "#00ff00",
+                "height": 193,
+                "pwidth": 5,
+                "width": 309,
+                "x": 227,
+                "y": 263
+            },
+            {
+                "code": 3,
+                "color": "#00ff00",
+                "height": 217,
+                "pwidth": 5,
+                "width": 268,
+                "x": 678,
+                "y": 267
+            }
+        ]
+    },
+    {
+        "canvas": [
+        ]
+    },
+    {
+        "canvas": [
+        ]
+    },
+    {
+        "canvas": [
+            {
+                "code": 2,
+                "color": "#000000",
+                "pwidth": 1,
+                "x": 526,
+                "x2": 307,
+                "y": 219,
+                "y2": 562
+            },
+            {
+                "code": 2,
+                "color": "#000000",
+                "pwidth": 1,
+                "x": 805,
+                "x2": 542,
+                "y": 205,
+                "y2": 572
+            },
+            {
+                "code": 2,
+                "color": "#000000",
+                "pwidth": 1,
+                "x": 866,
+                "x2": 999,
+                "y": 226,
+                "y2": 646
+            }
+        ]
+    },
+    {
+        "canvas": [
+        ]
+    },
+    {
+        "canvas": [
+            {
+                "code": 8,
+                "height": 300,
+                "path": ":/images/images/49.png",
+                "width": 300,
+                "x": 995,
+                "y": 209
+            }
+        ]
+    },
+    {
+        "canvas": [
+        ]
+    },
+    {
+        "canvas": [
+            {
+                "code": 8,
+                "height": 300,
+                "path": ":/images/images/50.png",
+                "width": 300,
+                "x": 1106,
+                "y": 275
+            },
+            {
+                "code": 8,
+                "height": 300,
+                "path": ":/images/images/52.png",
+                "width": 300,
+                "x": 771,
+                "y": 589
+            }
+        ]
+    }
+]
+

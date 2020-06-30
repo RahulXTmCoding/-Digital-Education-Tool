@@ -45,9 +45,29 @@ QBrush *CircleComponent::getBrush() const
     return brush;
 }
 
+void CircleComponent::setParent(AModel *model)
+{
+    parent=model;
+}
+
+AModel *CircleComponent::getParent()
+{
+    return parent;
+}
+
 void CircleComponent::setBrush(QBrush *value)
 {
     brush = value;
+}
+
+int CircleComponent::getRectNo()
+{
+    return rectNo;
+}
+
+void CircleComponent::setRectNo(int value)
+{
+    rectNo = value;
 }
 
 CircleComponent::CircleComponent()
@@ -72,16 +92,58 @@ void CircleComponent::draw(QPainter *painter)
 
 bool CircleComponent::isClicked(QPoint *point)
 {
+
+    QPainterPath *path=new QPainterPath();
+if(getRectNo()!=-1)
+   {
+    path=new QPainterPath();
+   path->addRect(x-5,y-radius-5,10,10);
+   if(path->contains(*point))
+   {
+       setRectNo(1);
+return true;
+   }
+   path=new QPainterPath();
+  path->addRect(x+radius-5,y-5,10,10);
+  if(path->contains(*point))
+  {
+      setRectNo(2);
+return true;
+  }
+  path=new QPainterPath();
+ path->addRect(x-5,y+radius-5,10,10);
+ if(path->contains(*point))
+ {
+     setRectNo(3);
+return true;
+ }
+ path=new QPainterPath();
+path->addRect(x-radius-5,y-5,10,10);
+if(path->contains(*point))
+{
+    setRectNo(4);
+return true;
+}
+
+}
+
 if(pow(point->x()-this->getX(),2)+pow(point->y()-this->getY(),2)-pow(this->getRadius(),2)<=0)
 {
+    setRectNo(0);
     return true;
 }
+setRectNo(-1);
 return false;
 }
 
 QString CircleComponent::componentName()
 {
-    return "Circle";
+    return name;
+}
+
+void CircleComponent::changeCompoentName(QString name)
+{
+this->name=name;
 }
 
 QJsonObject *CircleComponent::toJsonObject()
@@ -109,6 +171,32 @@ void CircleComponent::select(QPainter *p)
 
 void CircleComponent::update(int x, int y)
 {
+    int rect=getRectNo();
+    if(rect==0)
+    {
     this->setX(this->getX()+x);
     this->setY(this->getY()+y);
+
+    }
+    else
+    if(rect==1)
+    {
+        this->setRadius(radius-y);
+
+    }
+    else
+        if(rect==2)
+        {
+        this->setRadius(radius+x);
+        }
+    else
+     if(rect==3)
+     {
+         this->radius=radius+y;
+     }
+    else
+         if(rect==4)
+         {
+             this->radius=radius-x;
+         }
 }

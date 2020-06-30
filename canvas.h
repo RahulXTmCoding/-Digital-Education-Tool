@@ -1,10 +1,10 @@
 #ifndef CANVAS_H
 #define CANVAS_H
-
+#pragma once
 #endif // CANVAS_H
 #include <QPainter>
 #include <QFrame>
-#include <QFrame>
+
 #include "tmmodel.h"
 #include "textcomponent.h"
 #include "tmmodel.h"
@@ -13,12 +13,6 @@
 #include "rectanglecomponent.h"
 #include "linecomponent.h"
 #include "circlecomponent.h"
-namespace Ui {
-class Canvas ;
-}
-
-
-
 class Canvas : public QFrame
 {
 Q_OBJECT
@@ -30,7 +24,8 @@ public:
      double c_y;
      double c_width;
      double c_height;
-     int mode=0;
+     void changeComponentName(QString name,QModelIndexList li);
+     int mode=1;
      LinesCompoent *lineTemp=NULL;
      EllipseComponent *ellipse=NULL;
      RectangleComponent *rectangle=NULL;
@@ -44,8 +39,9 @@ public:
      void groupSelected();
      void ungroupSelected();
      void clear();
-     QString save();
+     QJsonObject * save();
      void open(QJsonArray &);
+     void drawPixmap(QString path);
      int getMode() const;
      void setMode(int value);
 

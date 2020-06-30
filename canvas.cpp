@@ -15,6 +15,12 @@ Canvas::Canvas( QWidget* parent )
     this->setFocusPolicy(Qt::StrongFocus);
 }
 
+void Canvas::changeComponentName(QString name, QModelIndexList li)
+{
+    this->model->changeComponentName(name,li);
+    update();
+}
+
 void Canvas::selectAll(QModelIndexList il)
 {
  this->model->selectAll(il);
@@ -40,7 +46,7 @@ void Canvas::clear()
     this->model->clear();
 }
 
-QString Canvas::save()
+QJsonObject * Canvas::save()
 {
     return this->model->save();
 }
@@ -48,6 +54,13 @@ QString Canvas::save()
 void Canvas::open(QJsonArray &arr)
 {
     this->model->open(arr);
+    update();
+}
+
+void Canvas::drawPixmap(QString path)
+{
+    this->model->drawPixmap(path);
+    mode=0;
     update();
 }
 
@@ -120,13 +133,24 @@ void Canvas::setMode(int value)
 void Canvas::paintEvent( QPaintEvent* pe )
 {
 
+
+
+
     this->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
 
     QFrame::paintEvent( pe );
     QPainter p(this);
+    for(int i=0;i<this->height();i=i+40)
+    {
+        QPen *pn=new QPen();
+        pn->setWidth(0.5);
+        pn->setColor(Qt::gray);
+        p.setPen(*pn);
+        p.drawLine(0,i,this->width(),i);
+    }
 
-
+    p.drawPixmap(0+(this->width()/2)-100,this->y()-10,200,100,QPixmap(":/images/tmlogo.png"));
     //p.setViewport(this->c_x,this->c_y,this->c_width,this->c_height);
 
 
@@ -211,12 +235,10 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 
         this->model->setInitialX(event->x());
         this->model->setInitialY(event->y());
-        /*if(this->model->getSelectedInex()!=-1)
-        {
-            this->model->getSelectedComponent()->update(movedX,movedY);
-        }
-*/
+
+
         this->model->update(movedX,movedY);
+
         this->model->selection=false;
        }
 
@@ -311,6 +333,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
           if(this->rectangle->getWidth()!=0 and this->rectangle->getHeight()!=0)
           {
           this->model->add(this->rectangle);
+              this->rectangle->setParent(this->model);
               this->rectangle=NULL;
       }
           else
@@ -346,6 +369,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
       if(this->ellipse->getWidth()!=0 and this->ellipse->getHeight()!=0)
       {
       this->model->add(this->ellipse);
+          this->ellipse->setParent(this->model);
           this->ellipse=NULL;
   }
       else
@@ -388,6 +412,11 @@ void Canvas::keyPressEvent(QKeyEvent *event)
     {
         this->model->setControllKey(Qt::Key_Control);
     }
+    if(event->key()==Qt::Key_Shift)
+    {
+        this->model->setShiftKey(Qt::Key_Shift);
+
+    }
 if(event->key()==Qt::Key_Delete)
 {
 this->model->deleteSelected();
@@ -402,6 +431,11 @@ void Canvas::keyReleaseEvent(QKeyEvent *ev)
     if(ev->key()==Qt::Key_Control)
     {
         this->model->setControllKey(-1);
+    }
+    if(ev->key()==Qt::Key_Shift)
+    {
+        this->model->setShiftKey(-1);
+
     }
 }
 

@@ -9,8 +9,10 @@
 #include "ellipsecomponent.h"
 #include "rectanglecomponent.h"
 #include "linecomponent.h"
+#include "pixmapcomponent.h"
 #include "circlecomponent.h"
-class TmModel
+#include "amodel.h"
+class TmModel:public AModel
 {
 private:
     QList<DrawableComponent *> *drawables;
@@ -28,11 +30,14 @@ private:
     int initialY;
 public:
     TmModel();
+    void drawPixmap(QString path);
     void clear();
-    QString save();
+    void changeComponentName(QString name,QModelIndexList li);
+    QJsonObject * save();
     void selectAll(QModelIndexList il);
     void deleteSelected();
     int controllKey=-1;
+    int shiftKey=-1;
     void open(QJsonArray &arr);
     void groupSelected();
     void ungroupSelected();
@@ -59,6 +64,8 @@ public:
     void redo();
     int getControllKey() const;
     void setControllKey(int value);
+    int getShiftKey();
+    void setShiftKey(int value);
 };
 
 #endif // TMMODEL_H

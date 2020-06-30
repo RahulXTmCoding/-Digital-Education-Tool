@@ -1,0 +1,43 @@
+[
+    {
+        "canvas": [
+            {
+                "code": 8,
+                "height": 300,
+                "path": ":/images/images/17.png",
+                "width": 300,
+                "x": 50,
+                "y": 50
+            }
+        ]
+    },
+    {
+        "canvas": [
+        ]
+    },
+    {
+        "canvas": [
+        ]
+    },
+    {
+        "canvas": [
+            {
+                "code": 8,
+                "height": 300,
+                "path": ":/images/images/51.png",
+                "width": 300,
+                "x": 1048,
+                "y": 205
+            },
+            {
+                "code": 8,
+                "height": 300,
+                "path": ":/images/images/52.png",
+                "width": 300,
+                "x": 571,
+                "y": 492
+            }
+        ]
+    }
+]
+

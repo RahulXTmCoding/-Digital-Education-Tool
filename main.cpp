@@ -27,8 +27,13 @@ int main(int argc, char *argv[])
 
 
     MainWindow w;
+    //w.setWindowState(Qt::WindowFullScreen);
+    w.setWindowIcon(QIcon(":/images/atom.png"));
     w.show();
+
     //QTimer::singleShot(5000, splash,SLOT(close())); // Timer
     //QTimer::singleShot(5000,&w,SLOT(show()));
+
+
     return a.exec();
 }
