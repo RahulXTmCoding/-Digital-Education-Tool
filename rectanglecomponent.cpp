@@ -245,14 +245,22 @@ void RectangleComponent::update(int x, int y)
     else
     if(rect==1)
     {
+        int w=width-x;
+        int h=height-y;
+        if(w<=2 or h<=2) return;
         this->setX(this->getX()+x);
         this->setY(this->getY()+y);
-        this->setWidth(width-x);
-        this->setHeight(height-y);
+        this->setWidth(w);
+        this->setHeight(h);
     }
     else
    if(rect==2)
    {
+
+
+       int h=height-y;
+       if(h<=2) return;
+
        this->setY(this->getY()+y);
 
        this->setHeight(height-y);
@@ -261,6 +269,10 @@ void RectangleComponent::update(int x, int y)
        if(rect==3)
        {
 
+           int w=width+x;
+           int h=height-y;
+           if(w<=2 or h<=2) return;
+
            this->setY(this->getY()+y);
            this->setWidth(width+x);
            this->setHeight(height-y);
@@ -268,11 +280,19 @@ void RectangleComponent::update(int x, int y)
     else
     if(rect==4)
     {
+
+        int w=width+x;
+
+        if(w<=2) return;
         this->setWidth(width+x);
     }
     else
         if(rect==5)
         {
+
+            int w=width+x;
+            int h=height+y;
+            if(w<=2 or h<=2) return;
             this->setWidth(width+x);
             this->setHeight(height+y);
 
@@ -280,11 +300,19 @@ void RectangleComponent::update(int x, int y)
     else
     if(rect==6)
     {
+
+
+        int h=height+y;
+        if(h<=2) return;
         this->setHeight(height+y);
     }
     else
         if(rect==7)
         {
+
+            int w=width-x;
+            int h=height+y;
+            if(w<=2 or h<=2) return;
             this->setX(this->getX()+x);
             this->setWidth(width-x);
             this->setHeight(height+y);
@@ -292,6 +320,10 @@ void RectangleComponent::update(int x, int y)
     else
             if(rect==8)
             {
+
+                int w=width-x;
+
+                if(w<=2 ) return;
                 this->setX(this->getX()+x);
                 this->setWidth(this->getWidth()-x);
             }

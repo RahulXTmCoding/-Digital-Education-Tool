@@ -145,7 +145,7 @@ void Canvas::paintEvent( QPaintEvent* pe )
     {
         QPen *pn=new QPen();
         pn->setWidth(0.5);
-        pn->setColor(Qt::gray);
+        pn->setColor(QColor("#ccccb3"));
         p.setPen(*pn);
         p.drawLine(0,i,this->width(),i);
     }
